@@ -1,0 +1,148 @@
+.about-project__wrapper {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 110px 70px 100px 70px;
+}
+
+.about-project__group {
+  margin-top: 70px;
+  margin-right: 50px;
+}
+
+.about-project__group:last-child {
+  margin-right: 0;
+}
+
+.about-project__title {
+  color: #000000;
+  letter-spacing: -0.04em;
+  font-size: 22px;
+  line-height: 27px;
+  font-weight: normal;
+  border-bottom: 1px solid #000;
+  padding-bottom: 23px;
+  margin: 0;
+}
+
+.about-project__group-title {
+  font-weight: normal;
+  font-size: 20px;
+  line-height: 24px;
+  letter-spacing: -0.04em;
+  color: #000000;
+  margin: 0 0 26px 0;
+}
+
+.about-project__group-info {
+  font-size: 14px;
+  line-height: 20px;
+  color: #000000;
+  margin: 0;
+}
+
+.about-project__time {
+  display: flex;
+  justify-content: space-between;
+}
+
+.about-project__lines {
+  display: grid;
+  grid-template-columns: 228px 1fr;
+  margin-top: 110px;
+}
+
+.about-project__timeline {
+  text-align: center;
+  background: #F2F2F2;
+  font-size: 14px;
+  line-height: 17px;
+  padding: 9px;
+}
+
+.about-project__timeline_type_green {
+  background: #2BE080;
+}
+
+.about-project__time-info {
+  color: #A0A0A0;
+  text-align: center;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 1.21;
+  padding: 14px;
+}
+
+@media(max-width: 768px) {
+  .about-project__wrapper {
+    padding: 90px 50px 78px;
+  }
+
+  .about-project__group {
+    margin-right: 40px;
+  }
+
+  .about-project__group-title {
+    margin: 0 0 22px 0;
+  }
+
+  .about-project__group-info {
+    font-size: 12px;
+    line-height: 1.5;
+  }
+
+  .about-project__lines {
+    grid-template-columns: 140px 1fr;
+    margin-top: 93px;
+  }
+}
+
+@media(max-width: 700px) {
+  .about-project__time {
+    flex-direction: column;
+  }
+}
+
+@media(max-width: 425px) {
+  .about-project__wrapper  {
+      padding: 70px 18px;
+  }
+
+  .about-project__title {
+    font-size: 18px;
+    line-height: 22px;
+    padding-bottom: 28px;
+  }
+
+  .about-project__group {
+    margin-top: 60px;
+    margin-right: 0;
+  }
+
+  .about-project__group-title {
+    font-size: 18px;
+    line-height: 22px;
+    margin: 0 0 16px 0;
+  }
+
+  .about-project__group-info {
+    font-size: 11px;
+    line-height: 1.45;
+  }
+
+  .about-project__lines {
+    grid-template-columns: 100px 1fr;
+    margin-top: 60px;
+  }
+
+  .about-project__timeline {
+    font-size: 11px;
+    line-height: 13px;
+    padding: 11px;
+  }
+
+  .about-project__time-info {
+    font-size: 11px;
+    line-height: 13px;
+    padding: 10px;
+  }
+}
