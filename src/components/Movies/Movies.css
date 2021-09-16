@@ -47,6 +47,14 @@
   opacity: 1;
 }
 
+.movies__notfound {
+  width: 100%;
+  text-align: center;
+  color: red;
+  font-size: 13px;
+  line-height: 15px;
+}
+
 @media(max-width: 1000px) {
   .movies__items {
     grid-template-columns: 1fr 1fr;
