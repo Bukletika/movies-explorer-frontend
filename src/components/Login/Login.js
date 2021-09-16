@@ -1,37 +1,68 @@
-import React from 'react';
-import {Link} from 'react-router-dom';
-
-// Импорт компонентов
-import useFormValidation from '../../hooks/useFormValidation';
-import Logo from '../Logo/Logo';
-import AuthForm from '../AuthForm/AuthForm';
-import Error from '../Error/Error';
-import Preloader from '../Preloader/Preloader';
-
-// Импорт констант
-import  { FORM_EMAIL_PATTERN } from '../../utils/constants';
-
-// Импорт стилей
 import './Login.css';
+import React, { useState } from 'react';
+import { useHistory  } from "react-router-dom";
+import Logo from '../Logo/Logo';
+import {Link} from 'react-router-dom';
+import AuthForm from '../AuthForm/AuthForm';
 
 function Login(props) {
 
-  const handleLogin = props.handleLogin;
+  const history = useHistory();
 
-  const {
-    values,
-    errorMessages,
-    isValid,
-    handleInputChange,
-    reset
-  } =  useFormValidation({});
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
+  const [emailError, setEmailError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+
+  // Активность кнопки отправки данных с формы
+  const [buttonCondition, setButtonCondition] = useState(false);
 
   // Функция отправки данных с формы
-  const handleSubmit = (evt) => {
-    evt.preventDefault();
-    handleLogin(values.email, values.password);
-    reset();
+  function handleSubmit(e) {
+
+    // Запрещаем браузеру переходить по адресу формы
+    e.preventDefault();
+
+    // Передаём значения управляемых компонентов во внешний обработчик
+    console.log(email);
+    console.log(password);
+    props.setLoggedIn(true);
+    history.push('/movies');
+  }
+
+  // Проверим валидность данных и изменим состояние кнопки
+  function handleButton () {
+    if (email && password) {
+      setButtonCondition(true);
+    }
+  }
+
+
+  // Проверка Email
+  const emailHandler = (e) => {
+    setEmail(e.target.value);
+    const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    if (!re.test(String(e.target.value).toLowerCase())) {
+      setEmailError('Что-то пошло не так...');
+      setButtonCondition(false);
+    } else {
+      setEmailError('');
+      handleButton();
+    }
+  }
+
+  // Проверка пароля
+  const passwordHandler = (e) => {
+    setPassword(e.target.value);
+    if (e.target.value.length < 3 || e.target.value.length > 8) {
+      setPasswordError('Что-то пошло не так...');
+      setButtonCondition(false);
+    }
+    else {
+      setPasswordError('');
+      handleButton();
+    }
   }
 
     return (
@@ -44,45 +75,19 @@ function Login(props) {
               name="login"
               submitBtnText="Войти"
               onSubmit={handleSubmit}
-              isValid={isValid}
-              values={values}
+              buttonCondition = {buttonCondition}
             >
-              {props.isLoading && <div className="form__loader"><Preloader /></div>}
               <fieldset className="form__fields">
 
                   <label className="form__label" htmlFor="email">E-mail</label>
-                  <input
-                    className={`form__input ${errorMessages.email ? "form__input_type_error" : ""}`}
-                    onChange={handleInputChange}
-                    name="email"
-                    type="email"
-                    placeholder="E-mail"
-                    pattern={FORM_EMAIL_PATTERN}
-                    id="email"
-                    value={values.email || ''}
-                    autoComplete="off"
-                    minLength="2"
-                    required
-                  />
-                  {isValid ? '' : <div className="form-profile__error">{errorMessages.email}</div>}
-
+                  <input className={emailError ? 'form__input form__input_type_error' : 'form__input'} onInput = {e => emailHandler(e)} name="email" type="text" placeholder="E-mail" id="email" value={email} autoComplete="off" required/>
+                  {emailError && <div className="form__error">{emailError}</div>}
 
                   <label className="form__label" htmlFor="password">Пароль</label>
-                  <input
-                    className={`form__input ${errorMessages.password ? "form__input_type_error" : ""}`}
-                    onChange={handleInputChange}
-                    name="password"
-                    type="password"
-                    placeholder="Пароль"
-                    id="password"
-                    minLength="2"
-                    value={values.password || ''}
-                    autoComplete="off"
-                    required
-                  />
-                  {isValid ? '' : <div className="form-profile__error">{errorMessages.password}</div>}
+                  <input className={passwordError ? 'form__input form__input_type_error' : 'form__input'} onInput = {e => passwordHandler(e)} name="password" type="password" placeholder="Пароль" id="password" value={password} autoComplete="off" required/>
+
+                  {passwordError && <div className="form__error">{passwordError}</div>}
               </fieldset>
-              {props.formAuthError && <Error>{props.formAuthError}</Error>}
             </AuthForm>
             <p className="login__subtitle">Еще не зарегистрированы?
               <Link className="login__link" to="/signup"> Регистрация</Link>
