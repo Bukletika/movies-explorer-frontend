@@ -1,15 +1,8 @@
 # movies-explorer-frontend
 Frontend для аутентификации пользователей и добавления карточек фильмов в избранное в личном кабинете пользователя
 
-## Ревьюеру
-Внутренние страницы можно посмотреть после авторизации на сайте (ввести любой e-mail и пароль), либо перейти напрямую по ссылкам:
-1. /movies
-2. /saved-movies
-3. /profile
-
-## Адрес верстки
-Временно расположен на обычном хостинге, не гарантируется полноценный функционал
-[diploma.bukletika.ru](http://diploma.bukletika.ru)
+## Адрес фронтенда
+[movies-bukletika.nomoredomains.monster](https://movies-bukletika.nomoredomains.monster)
 
 ## Используемые технологии
 1. React
