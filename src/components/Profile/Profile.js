@@ -1,105 +1,109 @@
-import React from 'react';
-import { CurrentUserContext } from '../../contexts/CurrentUserContext';
-
-// Импорт компонентов
-import useFormValidation from '../../hooks/useFormValidation';
-import Error from '../Error/Error';
+import './Profile.css';
+import React, { useState } from 'react';
+import { useHistory  } from "react-router-dom";
 import ProfileForm from '../ProfileForm/ProfileForm';
 import Header from '../Header/Header';
-import Preloader  from '../Preloader/Preloader';
-
-// Импорт констант
-import  { FORM_NAME_PATTERN, FORM_EMAIL_PATTERN } from '../../utils/constants';
-
-// Импорт стилей
-import './Profile.css';
 
 function Profile(props) {
-  const {
-    values,
-    setValues,
-    errorMessages,
-    isValid,
-    handleInputChange,
-    reset
-  } =  useFormValidation({});
 
-  const currentUser = React.useContext(CurrentUserContext);
+  const userData = props.userData;
 
-  // Задать значения инпутов
-  React.useEffect(() => {
-    setValues({
-      name: currentUser.name,
-      email: currentUser.email,
-    })
-  }, [currentUser.email, currentUser.name, setValues])
+  const history = useHistory();
+
+  const [name, setName] = useState(props.userData.name);
+  const [email, setEmail] = useState(props.userData.email);
+
+  const [nameError, setNameError] = useState('');
+  const [emailError, setEmailError] = useState('');
+
+  // Активность кнопки отправки данных с формы
+  const [buttonCondition, setButtonCondition] = useState(false);
+
+  // Функция отправки данных с формы
+  function handleSubmit(e) {
+
+    // Запрещаем браузеру переходить по адресу формы
+    e.preventDefault();
+
+    // Передаём значения управляемых компонентов во внешний обработчик
+    console.log(name);
+    console.log(email);
+  }
+
+  // Проверим валидность данных и изменим состояние кнопки
+  function handleButton () {
+    if (name && email) {
+      setButtonCondition(true);
+    }
+  }
+
+  function handleLogout() {
+    props.setLoggedIn(false);
+    history.push('/signin');
+  }
 
 
-  // Сабмит формы
-  const handleSubmit = (evt) => {
-    evt.preventDefault();
-    props.handleUpdateUser(values);
-    reset();
+  // Проверка Email
+  const emailHandler = (e) => {
+    setEmail(e.target.value);
+    const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    if (!re.test(String(e.target.value).toLowerCase())) {
+      setEmailError('Введите правильный e-mail');
+      setButtonCondition(false);
+    } else {
+      setEmailError('');
+      if (e.target.value !== props.userData.email) {
+        handleButton();
+      } else {
+        setButtonCondition(false);
+      }
+    }
+  }
+
+  // Проверка имени
+  const nameHandler = (e) => {
+    setName(e.target.value);
+    if (e.target.value.length < 3) {
+      setNameError('Введите правильное имя');
+      setButtonCondition(false);
+    }
+    else {
+      setNameError('');
+      if (e.target.value !== props.userData.name) {
+        handleButton();
+      } else {
+        setButtonCondition(false);
+      }
+    }
   }
 
   return (
     <>
-       <Header loggedIn={props.loggedIn}/>
-       <section className="profile">
+      <Header loggedIn={props.loggedIn}/>
+      <section className="profile">
         <ProfileForm
           name="form-profile"
           submitBtnText="Редактировать"
           onSubmit={handleSubmit}
-          isValid={isValid}
-          values={values}
+          buttonCondition = {buttonCondition}
+          userData = {userData}
         >
-
-          {props.isLoading && <div className="form-profile__loader"><Preloader /></div>}
-
           <fieldset className="form-profile__field">
             <label className="form-profile__label" htmlFor="name">Имя</label>
-            <input
-              className="form-profile__input"
-              onChange={handleInputChange}
-              name="name"
-              type="text"
-              minLength="2"
-              maxLength="30"
-              placeholder="Имя"
-              autoComplete="off"
-              pattern={FORM_NAME_PATTERN}
-              id="name"
-              value={values.name || ''}
-              required
-            />
-            {isValid ? '' : <div className="form-profile__error">{errorMessages.name}</div>}
+            <input className={nameError ? 'form-profile__input form-profile__input_type_error' : 'form-profile__input'} onChange = {e => nameHandler(e)} name="name" type="text" placeholder="Имя" id="name" value={name} required/>
+            {nameError && <div className="form-profile__error">{nameError}</div>}
           </fieldset>
           <fieldset className="form-profile__field">
             <label className="form-profile__label" htmlFor="email">E-mail</label>
-            <input
-              className="form-profile__input"
-              onChange={handleInputChange}
-              name="email"
-              minLength="2"
-              pattern={FORM_EMAIL_PATTERN}
-              type="email"
-              placeholder="E-mail"
-              autoComplete="off"
-              id="email"
-              value={values.email || ''}
-              required
-            />
-            {isValid ? '' : <div className="form-profile__error">{errorMessages.email}</div>}
+            <input className={emailError ? 'form-profile__input form-profile__input_type_error' : 'form-profile__input'} onChange = {e => emailHandler(e)} name="email" type="text" placeholder="E-mail" id="email" value={email} required/>
+            {emailError && <div className="form-profile__error">{emailError}</div>}
           </fieldset>
-          {props.formProfileSuccess && <span className="form-profile__success">{props.formProfileSuccess}</span>}
-          {props.formProfileError && <Error>{props.formProfileError}</Error>}
         </ProfileForm>
 
-        <button className="profile__logout" onClick={props.onSignOut}>Выйти из аккаунта</button>
+        <button className="profile__logout" onClick={handleLogout}>Выйти из аккаунта</button>
       </section>
     </>
   )
-
 }
 
 export default Profile;

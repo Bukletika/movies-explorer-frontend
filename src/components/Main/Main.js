@@ -9,7 +9,6 @@ import AboutMe from '../AboutMe/AboutMe';
 import Footer from '../Footer/Footer';
 
 function Main(props) {
-
   return (
     <>
       <Header loggedIn={props.loggedIn}/>

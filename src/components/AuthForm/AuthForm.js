@@ -6,8 +6,8 @@ function AuthForm(props) {
       <h2 className="form__heading">{props.title}</h2>
       {props.children}
       <button
-        className={props.isValid ? 'form__button' : 'form__button form__button_type_disabled'}
-        disabled={!props.isValid}
+        className={props.buttonCondition ? 'form__button' : 'form__button form__button_type_disabled'}
+        disabled={!props.buttonCondition}
         type="submit">{props.submitBtnText}
       </button>
     </form>
