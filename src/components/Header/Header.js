@@ -22,7 +22,7 @@ function Header(props) {
   }
 
   return (
-    <header className={`header ${props.loggedIn ? "" : "header_type_blue"}`}>
+    <header className={`header ${loggedIn ? "" : "header_type_blue"}`}>
       <div className="header__wrapper">
         <Logo />
         {loggedIn ? (
