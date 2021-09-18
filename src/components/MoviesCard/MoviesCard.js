@@ -1,8 +1,13 @@
 import React from "react";
+
+// Импорт констант
+import  { SHORT_MOVIE_DURATION } from '../../utils/constants';
+
+// Импорт стилей
 import './MoviesCard.css';
 
 function MoviesCard({
-  savedMovies,
+  savedMoviesPage,
   movie,
   handleMovieSave,
   handleMovieTest,
@@ -15,10 +20,10 @@ const isAdded = handleMovieTest(movie)
 
 // Duration
 function movieDuration() {
-  if(movie.duration <= 60) {
+  if(movie.duration <= SHORT_MOVIE_DURATION) {
     return `${movie.duration} мин`;
   } else {
-    return `${Math.floor(movie.duration / 60).toString()} ч ${Math.round((movie.duration % 60) * 0.6666).toString()} мин`
+    return `${Math.floor(movie.duration / SHORT_MOVIE_DURATION).toString()} ч ${Math.round((movie.duration % SHORT_MOVIE_DURATION) * 0.6666).toString()} мин`
   }
 };
 
@@ -27,7 +32,7 @@ function handleFilmSave() {
 }
 
 function handleFilmDelete() {
-  deleteMovie(movie);
+  deleteMovie(movie, savedMoviesPage);
 }
 
   return (
@@ -41,11 +46,10 @@ function handleFilmDelete() {
           {movieDuration()}
         </p>
       </div>
-
-      {savedMovies ? (
+      {savedMoviesPage ? (
         <button className="movies__delete" onClick={handleFilmDelete}></button>
         ) : (
-         (!isAdded ? <button className="movies__save" onClick={handleFilmSave}>Сохранить</button> : <div className="movies__saved"></div> )
+         (!isAdded ? <button className="movies__save" onClick={handleFilmSave}>Сохранить</button> : <button className="movies__saved" onClick={handleFilmDelete}></button> )
       )}
 
     </article>

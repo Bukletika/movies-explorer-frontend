@@ -4,7 +4,7 @@ import MoviesCard from '../MoviesCard/MoviesCard';
 import { MOVIES_IMAGES, MOVIES_QUANTITY } from '../../utils/constants';
 
 function MoviesCardList({
-  savedMovies,
+  savedMoviesPage,
   movies,
   handleMovieSave,
   handleMovieTest,
@@ -35,8 +35,6 @@ function MoviesCardList({
     setVisibledMoviesQuantity(visibledMoviesQuantity + cardsQuantity);
   };
 
-
-
   React.useEffect(() => {
     window.addEventListener('resize', changeScreenWidth);
     if (screenWidth >= 1280) {
@@ -58,7 +56,7 @@ function MoviesCardList({
     <section className="movies">
       <ul className="movies__items">
 
-      {!savedMovies ? (
+      {!savedMoviesPage ? (
 
         <>
           {movies.reduce((cardsShowQuantity, movie) => {
@@ -70,9 +68,10 @@ function MoviesCardList({
                       nameRU={movie.nameRU}
                       image={`${MOVIES_IMAGES}${movie.image.url}`}
                       link={movie.trailerLink}
-                      savedMovies={savedMovies}
+                      savedMoviesPage={savedMoviesPage}
                       handleMovieSave={handleMovieSave}
                       handleMovieTest={handleMovieTest}
+                      deleteMovie={deleteMovie}
                     />
                   </li>
                 );
@@ -91,7 +90,7 @@ function MoviesCardList({
                   nameRU={movie.nameRU}
                   image={`${movie.image}`}
                   link={movie.trailer}
-                  savedMovies={savedMovies}
+                  savedMoviesPage={savedMoviesPage}
                   handleMovieSave={handleMovieSave}
                   handleMovieTest={handleMovieTest}
                   deleteMovie={deleteMovie}

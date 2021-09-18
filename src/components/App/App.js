@@ -12,7 +12,8 @@ import  {
   REGISTER_ERROR,
   FORM_PROFILE_ERROR,
   FROM_PROFILE_SUCCESS,
-  LOAD_ERROR
+  LOAD_ERROR,
+  PAGE_ERROR
 } from '../../utils/constants';
 
 
@@ -221,9 +222,11 @@ function App() {
       .then((res) => {
         setSavedMovies([...savedMovies, res]);
         localStorage.setItem("savedMovies", JSON.stringify(savedMovies));
+        setLoadingError('');
       })
       .catch((err) => {
         console.log(`Что-то пошло не так. ${err}`);
+        setLoadingError(PAGE_ERROR);
       })
       .finally(() => {
         setIsLoading(false);
@@ -231,25 +234,37 @@ function App() {
   }
 
   /* Удалить фильм */
-  function deleteMovie (movie) {
+  function deleteMovie (movie, savedMoviesPage) {
     setIsLoading(true);
-    const deletedItem = savedMovies.find((item) => item.movieId === movie.movieId)
+
+    const deletedItem = savedMovies.find((item) => item.movieId === (savedMoviesPage ? movie.movieId : movie.id))
 
     mainApi
       .deleteMovie(deletedItem)
       .then((res) => {
         if (res) {
-
           const savedArray = savedMovies.filter((item) => {
             return item.movieId !== res.movie.movieId
           })
-
           setSavedMovies(savedArray);
-
           localStorage.setItem("savedMovies", JSON.stringify(savedArray));
+
+          let filteredSavedMovies = JSON.parse(localStorage.getItem('filteredSavedMovies'));
+
+          if (savedMoviesPage && filteredSavedMovies !== null) {
+            const savedMoviesFilteredArr = filteredSavedMovies.filter((item) => {
+              return item.movieId !== res.movie.movieId
+            })
+            localStorage.setItem("filteredSavedMovies", JSON.stringify(savedMoviesFilteredArr));
+          }
+
+          setLoadingError('');
         }
       })
-      .catch((err) => console.log(err))
+      .catch((err) => {
+        setLoadingError(PAGE_ERROR);
+        console.log(err);
+      })
       .finally(() => {
         setIsLoading(false);
       });
@@ -293,10 +308,11 @@ function App() {
             setIsLoading={setIsLoading}
             loadingError={loadingError}
             component={Movies}
-            savedMovies={false} // Проверка на тип страницы
+            savedMoviesPage={false} // Проверка на тип страницы
             handleMovieSave={handleMovieSave} // Добавить фильм в сохраненные
             handleMovieTest={handleMovieTest} //Проверить, есть ли фильм в сохраненных
             movies={movies}
+            deleteMovie={deleteMovie}
           />
 
           <ProtectedRoute
@@ -306,7 +322,7 @@ function App() {
             setIsLoading={setIsLoading}
             loadingError={loadingError}
             component={SavedMovies}
-            savedMovies={true} // Проверка на тип страницы
+            savedMoviesPage={true} // Проверка на тип страницы
             movies={savedMovies}
             deleteMovie={deleteMovie}
             handleMovieTest={handleMovieTest}

@@ -2,7 +2,7 @@ import React from 'react';
 import { Link, NavLink } from 'react-router-dom';
 
 // Импорт констант
-import { siteMenu } from '../../utils/utils';
+import { siteMenuItems } from '../../utils/utils';
 
 // Импорт изображений
 import accountImage from '../../images/account.svg';
@@ -23,7 +23,7 @@ function Navigation(props) {
           <NavLink exact className="navigation__link" activeClassName="navigation__link_type_active" to="/">Главная</NavLink>
         </li>
 
-        {siteMenu.map((item) => (
+        {siteMenuItems.map((item) => (
           <li className="navigation__item" key={item.id}>
             <NavLink className="navigation__link" activeClassName="navigation__link_type_active" to={item.link}>{item.title}</NavLink>
           </li>

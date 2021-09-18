@@ -64,6 +64,14 @@
   position: absolute;
   top: 14px;
   right: 14px;
+  cursor: pointer;
+  transition: opacity .5s ease;
+  border: none;
+  outline: none
+}
+
+.movies__saved:hover {
+  opacity: .8;
 }
 
 .movies__delete {

@@ -5,8 +5,6 @@ import FilterCheckbox from '../FilterCheckbox/FilterCheckbox';
 import useFormValidation from '../../hooks/useFormValidation';
 
 function SearchForm({
-  isLoading,
-  movies,
   isChecked,
   searchMovies,
   handleCkecked,
@@ -23,7 +21,8 @@ function SearchForm({
    const handleSubmit = (evt) => {
     evt.preventDefault();
 
-    searchMovies(values.search, isChecked)
+    searchMovies(values.search, isChecked);
+
   }
 
   return (

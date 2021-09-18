@@ -9,6 +9,7 @@ export const FORM_EMAIL_PATTERN = '^([a-z0-9_-].)*[a-z0-9_-]+@[a-z0-9_-]+(.[a-z0
 
 export const FROM_PROFILE_SUCCESS = 'Профиль успешно обновлен!'
 export const LOAD_ERROR = 'Ошибка загрузки';
+export const PAGE_ERROR = 'На странице произошла ошибка. Попробуйте выполнить операцию еще раз';
 
 export const MOVIES_QUANTITY = {
   size2: 2,
@@ -17,3 +18,5 @@ export const MOVIES_QUANTITY = {
   size8: 8,
   size12: 12,
 };
+
+export const SHORT_MOVIE_DURATION = 40;

@@ -31,14 +31,8 @@ export const navigationLinks = [
   }
 ]
 
-// Данные пользователя
-export const userData = {
-  name: 'Антон',
-  email: 'test@tester.ru'
-}
-
 // Основное меню
-export const siteMenu = [
+export const siteMenuItems = [
   {
     title: 'Фильмы',
     link: '/movies',

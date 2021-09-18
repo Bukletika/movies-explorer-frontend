@@ -7,26 +7,53 @@ import SearchForm from '../SearchForm/SearchForm';
 import MoviesCardList from '../MoviesCardList/MoviesCardList';
 import Footer from '../Footer/Footer';
 
+// Импорт констант
+import  { SHORT_MOVIE_DURATION } from '../../utils/constants';
+
 
 function SavedMovies({
   loggedIn,
   isLoading,
   setIsLoading,
   loadingError,
-  savedMovies,
+  savedMoviesPage,
   movies,
   deleteMovie,
   handleMovieTest,
 }) {
 
   // Найденные фильмы
-  const[filteredMovies, setFilteredMovies] = React.useState([]);
+  const[filteredMovies, setFilteredMovies] = React.useState(movies);
 
   // Был ли поисковый запрос на странице?
   const[query, setQuery] = React.useState(false);
 
   // Чекбокс короткометражек
   const[isChecked, setIsChecked] = React.useState(false);
+
+  React.useEffect(() => {
+    let selectedMovies = JSON.parse(localStorage.getItem('filteredSavedMovies'));
+    if (query) {
+      setFilteredMovies(selectedMovies);
+    } else {
+      if (isChecked && selectedMovies === null) {
+        const shortMovies = movies.filter((item) => {
+          return item.duration < SHORT_MOVIE_DURATION;
+        });
+        setFilteredMovies(shortMovies);
+      } else if (isChecked && selectedMovies) {
+        const shortMovies = selectedMovies.filter((item) => {
+          return item.duration < SHORT_MOVIE_DURATION;
+        });
+        setFilteredMovies(shortMovies);
+      } else {
+        setFilteredMovies(movies);
+      }
+    }
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [movies])
+
 
   function handleCkecked(evt) {
     setIsChecked(evt.target.checked);
@@ -39,11 +66,17 @@ function SavedMovies({
 
     if (!isChecked) {
       const shortMovies = filteredMovies.filter((item) => {
-        return item.duration < 40;
+        return item.duration < SHORT_MOVIE_DURATION;
       });
       setFilteredMovies(shortMovies);
     } else {
-      setFilteredMovies(selectedMovies);
+        if (selectedMovies === null) {
+          setFilteredMovies(movies);
+        } else if (query) {
+          setFilteredMovies(selectedMovies);
+        } else {
+          setFilteredMovies(movies);
+        }
     }
   }
 
@@ -65,7 +98,7 @@ function SavedMovies({
       localStorage.setItem('filteredSavedMovies', JSON.stringify(selectedMovies));
       if (isChecked) {
         const shortMovies = selectedMovies.filter((item) => {
-          return item.duration < 40;
+          return item.duration < SHORT_MOVIE_DURATION;
         });
         setFilteredMovies(shortMovies);
       } else {
@@ -90,31 +123,20 @@ function SavedMovies({
 
       {isLoading && <Preloader />}
 
-      {filteredMovies && query && (
-        <MoviesCardList
-          savedMovies={savedMovies}
-          movies={filteredMovies}
-          deleteMovie={deleteMovie}
-          handleMovieTest={handleMovieTest}
-        />
-      )}
-
-      {!query && (
-        <MoviesCardList
-          savedMovies={savedMovies}
-          movies={movies}
-          deleteMovie={deleteMovie}
-          handleMovieTest={handleMovieTest}
-        />
+      {!isLoading && loadingError !== '' && (
+        <div className="movies__info">{loadingError}</div>
       )}
 
       {filteredMovies.length === 0 && query && (
         <div className="movies__notfound">Фильмов по заданным параметрам поиска не найдено</div>
       )}
 
-      {!isLoading && loadingError !== '' && (
-        <div className="movies__info">{loadingError}</div>
-      )}
+      <MoviesCardList
+        savedMoviesPage={savedMoviesPage}
+        movies={filteredMovies}
+        deleteMovie={deleteMovie}
+        handleMovieTest={handleMovieTest}
+      />
 
       <Footer />
     </>
